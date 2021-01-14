@@ -6,7 +6,7 @@ class Product(models.Model):
     name = models.CharField(max_length=50)
     family = models.CharField(max_length=50, blank=True, default='')
     price = models.FloatField()
-    remark = models.CharField(max_length=200, blank=True, null=True)
+    remark = models.CharField(max_length=200, blank=True, default='')
 
     def __str__(self):
         return self.code
@@ -30,7 +30,7 @@ class Client(models.Model):
 class Order(models.Model):
     code = models.CharField(max_length=10, unique=True)
     date = models.DateTimeField(format('%Y-%m-%d %H:%m'))
-    client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
+    client = models.ForeignKey(Client, related_name='client', on_delete=models.DO_NOTHING)
     products = models.ManyToManyField(Product, related_name='products')
 
     def __str__(self):
