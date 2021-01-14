@@ -1,9 +1,15 @@
 from django.urls import path
+from django.views.generic import RedirectView
 
 from api import views
 
-# product
+# home
 urlpatterns = [
+    path('', RedirectView.as_view(url="/admin/"), name='home'),
+]
+
+# product
+urlpatterns += [
     path('product/', views.product_list, name='product-list'),
     path('product/detail/<int:pk>/', views.product_detail, name='product-detail'),
 ]
