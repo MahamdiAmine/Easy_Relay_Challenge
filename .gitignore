@@ -1,0 +1,23 @@
+# envirement cache
+.idea
+.vscode
+__pycache__/
+
+# migration files
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
+
+# static files
+static/
+staticfiles/
+!**/static/**
+
+# venv
+venv
+
+# databases
+db.sqlite3
+
+# config files
+# .env
