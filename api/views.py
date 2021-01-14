@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from api.serializers import ProductSerializer, ClientSerializer, OrderSerializer
-from .models import Product, Client, Order
+from core.serializers import ProductSerializer, ClientSerializer, OrderSerializer
+from core.models import Product, Client, Order
 
 
 @api_view(['GET', 'POST'])

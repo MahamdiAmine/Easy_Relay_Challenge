@@ -5,8 +5,8 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from .models import Product, Client, Order
-from .serializers import ProductSerializer, ClientSerializer, OrderSerializer
+from core.models import Product, Client, Order
+from core.serializers import ProductSerializer, ClientSerializer, OrderSerializer
 
 PRODUCTS_URL = reverse("product-list")
 PRODUCT_DETAIL = "product-detail"
@@ -70,7 +70,7 @@ class GetSingleProductTest(TestCase):
         self.client = APIClient()
 
     def test_get_valid_single_product(self):
-        product4 = Product.objects.create(
+        product = Product.objects.create(
             code="PR004",
             name="Product 4",
             family="F002",
@@ -78,9 +78,9 @@ class GetSingleProductTest(TestCase):
             remark="test retrieving a product"
         )
         response = self.client.get(
-            reverse(PRODUCT_DETAIL, kwargs={"pk": product4.pk})
+            reverse(PRODUCT_DETAIL, kwargs={"pk": product.pk})
         )
-        serializer = ProductSerializer(product4)
+        serializer = ProductSerializer(product)
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -100,40 +100,40 @@ class UpdateSingleProductTest(TestCase):
         self.client = APIClient()
 
     def test_valid_update_product(self):
-        product5 = Product.objects.create(
+        product = Product.objects.create(
             code="PR005",
             name="Product 5",
             family="F002",
             price=300,
         )
-        updated_product5 = {
+        updated_product = {
             "code": "PR005",
             "name": "Updated Product 5",
             "family": "F005",
             "price": 265,
         }
         response = self.client.put(
-            reverse(PRODUCT_DETAIL, kwargs={"pk": product5.pk}),
-            data=json.dumps(updated_product5),
+            reverse(PRODUCT_DETAIL, kwargs={"pk": product.pk}),
+            data=json.dumps(updated_product),
             content_type="application/json"
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_invalid_update_product(self):
-        invalid_update_product6 = {
+        invalid_update_product = {
             "code": "PR006",
             "remark": "invalid Updated for Product 6",
             "price": 100
         }
-        product6 = Product.objects.create(
+        product = Product.objects.create(
             code="PR006",
             name="Product 6",
             family="F002",
             price=270,
         )
         response = self.client.put(
-            reverse(PRODUCT_DETAIL, kwargs={"pk": product6.pk}),
-            data=json.dumps(invalid_update_product6),
+            reverse(PRODUCT_DETAIL, kwargs={"pk": product.pk}),
+            data=json.dumps(invalid_update_product),
             content_type="application/json")
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -148,14 +148,14 @@ class DeleteSingleProductTest(TestCase):
         self.client = APIClient()
 
     def test_valid_delete_product(self):
-        product6 = Product.objects.create(
+        product = Product.objects.create(
             code="PR006",
             name="Product 6",
             family="F003",
             price=330,
         )
         response = self.client.delete(
-            reverse(PRODUCT_DETAIL, kwargs={"pk": product6.pk}))
+            reverse(PRODUCT_DETAIL, kwargs={"pk": product.pk}))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_invalid_delete_product(self):
@@ -221,7 +221,7 @@ class GetSingleClientTest(TestCase):
         self.client = APIClient()
 
     def test_get_valid_single_client(self):
-        client4 = Client.objects.create(
+        client = Client.objects.create(
             code="CL004",
             first_name="client4",
             last_name="client4",
@@ -230,9 +230,9 @@ class GetSingleClientTest(TestCase):
             mobile_phone1="0123456789",
         )
         response = self.client.get(
-            reverse(CLIENT_DETAIL, kwargs={"pk": client4.pk})
+            reverse(CLIENT_DETAIL, kwargs={"pk": client.pk})
         )
-        serializer = ClientSerializer(client4)
+        serializer = ClientSerializer(client)
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -252,7 +252,7 @@ class UpdateSingleClientTest(TestCase):
         self.client = APIClient()
 
     def test_valid_update_client(self):
-        client5 = Client.objects.create(
+        client = Client.objects.create(
             code="CL005",
             first_name="client5",
             last_name="client5",
@@ -260,7 +260,7 @@ class UpdateSingleClientTest(TestCase):
             date_of_birth="1990-01-01",
             mobile_phone1="0123456789",
         )
-        updated_client5 = {
+        updated_client = {
             "code": "CL005",
             "first_name": "client5",
             "last_name": "client5",
@@ -269,14 +269,14 @@ class UpdateSingleClientTest(TestCase):
             "mobile_phone1": "0123456789"
         }
         response = self.client.put(
-            reverse(CLIENT_DETAIL, kwargs={"pk": client5.pk}),
-            data=json.dumps(updated_client5),
+            reverse(CLIENT_DETAIL, kwargs={"pk": client.pk}),
+            data=json.dumps(updated_client),
             content_type="application/json"
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_invalid_update_client(self):
-        client6 = Client.objects.create(
+        client = Client.objects.create(
             code="CL006",
             first_name="client6",
             last_name="client6",
@@ -285,7 +285,7 @@ class UpdateSingleClientTest(TestCase):
             mobile_phone1="0123456789"
         )
 
-        invalid_update_client6 = {
+        invalid_update_client = {
             "code": "CL006",
             "first_name": "client6",
             "last_name": "client6",
@@ -293,8 +293,8 @@ class UpdateSingleClientTest(TestCase):
         }
 
         response = self.client.put(
-            reverse(CLIENT_DETAIL, kwargs={"pk": client6.pk}),
-            data=json.dumps(invalid_update_client6),
+            reverse(CLIENT_DETAIL, kwargs={"pk": client.pk}),
+            data=json.dumps(invalid_update_client),
             content_type="application/json")
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -309,16 +309,16 @@ class DeleteSingleClientTest(TestCase):
         self.client = APIClient()
 
     def test_valid_delete_client(self):
-        client6 = Client.objects.create(
-            code="CL006",
-            first_name="client6",
-            last_name="client6",
+        client = Client.objects.create(
+            code="CL007",
+            first_name="client 7",
+            last_name="client 7",
             address="Batna, Algeria",
             date_of_birth="1990-01-01",
             mobile_phone1="0123456789",
         )
         response = self.client.delete(
-            reverse(CLIENT_DETAIL, kwargs={"pk": client6.pk}))
+            reverse(CLIENT_DETAIL, kwargs={"pk": client.pk}))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_invalid_delete_client(self):
@@ -335,10 +335,7 @@ class OrderApiTest(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-
-    def test_retrieve_orders_list(self):
-        # Test retrieving a list of orders
-        client = Client.objects.create(
+        self.client1 = Client.objects.create(
             code="CL001",
             first_name="client1",
             last_name="client1",
@@ -346,37 +343,41 @@ class OrderApiTest(TestCase):
             date_of_birth="1990-01-01",
             mobile_phone1="0123456789",
         )
-        product1 = Product.objects.create(
+        self.product1 = Product.objects.create(
             code="PR001",
             name="Product 1",
             family="F001",
             price=200,
         )
-        product2 = Product.objects.create(
+        self.product2 = Product.objects.create(
             code="PR002",
             name="Product 2",
             family="F001",
             price=450,
         )
+
+    def test_retrieve_orders_list(self):
+        # Test retrieving a list of orders
+
         order1 = Order.objects.create(
             code="O001",
             date="2021-01-12T22:39:37+01:00",
-            client=client,
+            client=self.client1,
         )
         order2 = Order.objects.create(
             code="O002",
             date="2021-01-12T22:39:37+01:00",
-            client=client,
+            client=self.client1,
         )
         order3 = Order.objects.create(
             code="O003",
             date="2021-01-12T22:39:37+01:00",
-            client=client,
+            client=self.client1,
         )
 
-        order1.products.set([product1, product2])
-        order2.products.set([product1])
-        order3.products.set([product2])
+        order1.products.set([self.product1, self.product2])
+        order2.products.set([self.product1])
+        order3.products.set([self.product2])
         response = self.client.get(ORDERS_URL)
         orders = Order.objects.all().order_by("id")
         serializer = OrderSerializer(orders, many=True)
@@ -385,33 +386,13 @@ class OrderApiTest(TestCase):
 
     def test_create_order(self):
         # test creating a new order
-        product1 = Product.objects.create(
-            code="PR001",
-            name="Product 1",
-            family="F001",
-            price=200,
-        )
-        product2 = Product.objects.create(
-            code="PR002",
-            name="Product 2",
-            family="F001",
-            price=200,
-        )
-        client = Client.objects.create(
-            code="CL001",
-            first_name="client1",
-            last_name="client1",
-            address="Batna, Algeria",
-            date_of_birth="1990-01-01",
-            mobile_phone1="0123456789",
-        )
         order = {
             "code": "O001",
             "date": "2021-01-12T22:39:37+01:00",
-            "client": client.pk,
+            "client": self.client1.pk,
             "products": [
-                product1.pk,
-                product2.pk
+                self.product1.pk,
+                self.product2.pk
             ]
         }
 
@@ -625,5 +606,3 @@ class GetTotalPriceTest(TestCase):
     def test_total_price(self):
         self.assertEqual(self.order1.total_price(), 650.0)
         self.assertEqual(self.order2.total_price(), 0)
-
-
