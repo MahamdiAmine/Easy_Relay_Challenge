@@ -1,27 +1,50 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from core.serializers import ProductSerializer, ClientSerializer, OrderSerializer
 from core.models import Product, Client, Order
+from core.serializers import ProductSerializer, ClientSerializer, OrderSerializer
 
 
-@api_view(['GET', 'POST'])
-def product_list(request):
-    """
-    List all the products, or create a new one.
-    """
-    if request.method == 'GET':
+class ProductAPIView(APIView):
+    def get(self, request):
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
 
-    elif request.method == 'POST':
+    def post(self, request):
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ProductDetails(APIView):
+    def get_object(self, pk):
+        try:
+            return Product.objects.get(id=pk)
+        except Product.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, pk):
+        product = self.get_object(pk)
+        serializer = ProductSerializer(product)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        product = self.get_object(pk)
+        serializer = ProductSerializer(product, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        product = self.get_object(pk)
+        product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -50,17 +73,13 @@ def product_detail(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['GET', 'POST'])
-def client_list(request):
-    """
-    List all the clients, or create a new one.
-    """
-    if request.method == 'GET':
+class ClientAPIView(APIView):
+    def get(self, request):
         clients = Client.objects.all()
         serializer = ClientSerializer(clients, many=True)
         return Response(serializer.data)
 
-    elif request.method == 'POST':
+    def post(self, request):
         serializer = ClientSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -94,17 +113,13 @@ def client_detail(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['GET', 'POST'])
-def order_list(request):
-    """
-    List all the orders, or create a new one.
-    """
-    if request.method == 'GET':
+class OrderAPIView(APIView):
+    def get(self, request):
         orders = Order.objects.all()
         serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data)
 
-    elif request.method == 'POST':
+    def post(self, request):
         serializer = OrderSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
