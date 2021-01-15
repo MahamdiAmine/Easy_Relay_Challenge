@@ -117,7 +117,7 @@ class UpdateSingleProductTest(TestCase):
             data=json.dumps(updated_product),
             content_type="application/json"
         )
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_invalid_update_product(self):
         invalid_update_product = {
@@ -273,7 +273,7 @@ class UpdateSingleClientTest(TestCase):
             data=json.dumps(updated_client),
             content_type="application/json"
         )
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_invalid_update_client(self):
         client = Client.objects.create(
@@ -498,7 +498,7 @@ class UpdateSingleOrderTest(TestCase):
             data=json.dumps(updated_order),
             content_type="application/json"
         )
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_invalid_update_order(self):
         invalid_update_order = {

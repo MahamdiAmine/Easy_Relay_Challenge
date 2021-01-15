@@ -11,17 +11,17 @@ urlpatterns = [
 # product
 urlpatterns += [
     path('product/', views.ProductAPIView.as_view(), name='product-list'),
-    path('product/detail/<int:pk>/', views.product_detail, name='product-detail'),
+    path('product/detail/<int:pk>/', views.ProductDetails.as_view(), name='product-detail'),
 ]
 
 # client
 urlpatterns += [
     path('client/', views.ClientAPIView.as_view(), name='client-list'),
-    path('client/detail/<int:pk>/', views.client_detail, name='client-detail'),
+    path('client/detail/<int:pk>/', views.ClientDetails.as_view(), name='client-detail'),
 ]
 
 # order
 urlpatterns += [
     path('order/', views.OrderAPIView.as_view(), name='order-list'),
-    path('order/detail/<int:pk>/', views.order_detail, name='order-detail'),
+    path('order/detail/<int:pk>/', views.OrderDetails.as_view(), name='order-detail'),
 ]
