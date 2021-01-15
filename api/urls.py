@@ -1,27 +1,16 @@
-from django.urls import path
+from django.urls import path, include
 from django.views.generic import RedirectView
+from rest_framework.routers import DefaultRouter
 
 from api import views
 
-# home
+router = DefaultRouter()
+
+router.register('product', views.ProductViewSet, basename='product')
+router.register('client', views.ClientViewSet, basename='client')
+router.register('order', views.OrderViewSet, basename='order')
+
 urlpatterns = [
     path('', RedirectView.as_view(url="/admin/"), name='home'),
-]
-
-# product
-urlpatterns += [
-    path('product/', views.ProductAPIView.as_view(), name='product-list'),
-    path('product/detail/<int:pk>/', views.ProductDetails.as_view(), name='product-detail'),
-]
-
-# client
-urlpatterns += [
-    path('client/', views.ClientAPIView.as_view(), name='client-list'),
-    path('client/detail/<int:pk>/', views.ClientDetails.as_view(), name='client-detail'),
-]
-
-# order
-urlpatterns += [
-    path('order/', views.OrderAPIView.as_view(), name='order-list'),
-    path('order/detail/<int:pk>/', views.OrderDetails.as_view(), name='order-detail'),
+    path('', include(router.urls)),
 ]
